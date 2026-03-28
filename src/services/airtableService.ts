@@ -1,27 +1,36 @@
 import { AirtableResponse, TriageRecord, TriageStatus } from '../types';
 
-const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID;
-const TABLE_NAME = import.meta.env.VITE_AIRTABLE_TABLE_NAME;
-const API_KEY = import.meta.env.VITE_AIRTABLE_API_KEY;
+const getAirtableUrl = () => {
+  const baseId = import.meta.env.VITE_AIRTABLE_BASE_ID;
+  const tableName = import.meta.env.VITE_AIRTABLE_TABLE_NAME;
+  return `https://api.airtable.com/v0/${baseId}/${tableName}`;
+};
 
-const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+const getApiKey = () => import.meta.env.VITE_AIRTABLE_API_KEY;
 
 export const fetchTriageLogs = async (): Promise<TriageRecord[]> => {
   try {
-    const response = await fetch(AIRTABLE_URL, {
+    const url = getAirtableUrl();
+    const apiKey = getApiKey();
+    
+    console.log('📡 Fetching from Airtable:', url);
+    
+    const response = await fetch(url, {
       headers: {
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
       },
     });
 
     if (!response.ok) {
+      console.error('❌ Airtable Error Details:', response.status, response.statusText);
       throw new Error(`Airtable API error: ${response.statusText}`);
     }
 
     const data: AirtableResponse = await response.json();
+    console.log('✅ Sync Successful:', data.records.length, 'records found.');
     return data.records;
   } catch (error) {
-    console.error('Error fetching triage logs:', error);
+    console.error('🛑 Critical Sync Failure:', error);
     throw error;
   }
 };
@@ -31,22 +40,29 @@ export const updateTriageRecord = async (
   fields: Partial<TriageRecord['fields']>
 ): Promise<TriageRecord> => {
   try {
-    const response = await fetch(`${AIRTABLE_URL}/${recordId}`, {
+    const url = `${getAirtableUrl()}/${recordId}`;
+    const apiKey = getApiKey();
+    
+    console.log('🔄 Updating Case:', recordId, 'via', url);
+    
+    const response = await fetch(url, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ fields }),
     });
 
     if (!response.ok) {
+      console.error('❌ Update Error:', response.status, response.statusText);
       throw new Error(`Airtable API error: ${response.statusText}`);
     }
 
+    console.log('✅ Update Saved Successfully.');
     return await response.json();
   } catch (error) {
-    console.error('Error updating triage record:', error);
+    console.error('🛑 Critical Update Failure:', error);
     throw error;
   }
 };
