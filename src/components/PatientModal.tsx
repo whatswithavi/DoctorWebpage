@@ -40,7 +40,7 @@ export default function PatientModal({ record, onClose, onUpdate }: PatientModal
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+          'Authorization': `Bearer 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`
         },
         body: JSON.stringify({
           model: 'llama-3.1-8b-instant',
