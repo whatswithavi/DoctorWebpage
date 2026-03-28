@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-midnight: #0a0a0c;
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+  --color-critical: #ef4444;
+  --color-urgent: #f97316;
+  --color-pending: #3b82f6;
+  --color-closed: #10b981;
+}
+
+@layer base {
+  body {
+    @apply bg-midnight text-white antialiased overflow-hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-glass backdrop-blur-xl border border-glass-border rounded-2xl shadow-2xl;
+  }
+
+  .glass-button {
+    @apply bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 px-4 py-2 rounded-lg transition-all active:scale-95;
+  }
+
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+  }
+
+  .status-critical { @apply bg-critical/20 text-critical border border-critical/30; }
+  .status-urgent { @apply bg-urgent/20 text-urgent border border-urgent/30; }
+  .status-pending { @apply bg-pending/20 text-pending border border-pending/30; }
+  .status-closed { @apply bg-closed/20 text-closed border border-closed/30; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

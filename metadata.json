@@ -1,0 +1,5 @@
+{
+  "name": "MediSetu Doctor's Command Center",
+  "description": "A high-fidelity, React-based Doctor's Triage Dashboard for the MediSetu platform, syncing in real-time with Airtable.",
+  "requestFramePermissions": []
+}
