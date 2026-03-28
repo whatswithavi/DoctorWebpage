@@ -4,9 +4,20 @@ import { motion } from 'motion/react';
 interface SidebarProps {
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
+  activeView: 'triage' | 'schedule';
+  setActiveView: (view: 'triage' | 'schedule') => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function Sidebar({ activeFilter, setActiveFilter }: SidebarProps) {
+export default function Sidebar({ 
+  activeFilter, 
+  setActiveFilter, 
+  activeView, 
+  setActiveView, 
+  isOpen, 
+  onClose 
+}: SidebarProps) {
   const filters = [
     { id: 'All', icon: LayoutDashboard, label: 'All Cases' },
     { id: 'CRITICAL', icon: AlertCircle, label: 'Critical Cases' },

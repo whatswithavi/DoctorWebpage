@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Activity, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import { Activity, AlertCircle, Loader2, RefreshCw, Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import PatientCard from './components/PatientCard';
 import PatientModal from './components/PatientModal';
+import Schedule from './components/Schedule';
 import { fetchTriageLogs, updateTriageRecord } from './services/airtableService';
 import { TriageRecord } from './types';
 
@@ -12,6 +13,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [activeView, setActiveView] = useState<'triage' | 'schedule'>('triage');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<TriageRecord | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
@@ -50,15 +53,25 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-midnight text-white overflow-hidden">
-      <Sidebar activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+    <div className="flex h-screen bg-midnight text-white overflow-hidden relative">
+      <Sidebar
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        activeView={activeView}
+        setActiveView={setActiveView}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
-      <main className="flex-1 flex flex-col min-w-0 relative">
+      <main className="flex-1 flex flex-col min-w-0 w-full relative h-screen">
         {/* Header */}
-        <header className="h-24 border-b border-white/10 flex items-center justify-between px-10 bg-black/10 backdrop-blur-md z-10">
+        <header className="h-24 border-b border-white/10 flex items-center justify-between px-4 md:px-10 bg-black/10 backdrop-blur-md z-10">
           <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold tracking-tight">{activeFilter} Triage Feed</h2>
-            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+            <button onClick={() => setIsSidebarOpen(true)} className="md:hidden p-2 hover:bg-white/10 rounded-lg">
+              <Menu className="w-6 h-6" />
+            </button>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">{activeFilter} Triage Feed</h2>
+            <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">
                 {filteredRecords.length} Active Cases
